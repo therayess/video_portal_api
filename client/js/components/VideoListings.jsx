@@ -20,6 +20,7 @@ class VideoListings extends React.Component {
 		this.props.getVideosAction(this.props.user.sessionId, this.state.limit, this.state.videos.length);
 	}
 	handleVideosPlay(e) {
+		// To make sure only one video is playing at a time
 		let videos = document.getElementsByTagName('video'),
 			currentVideo = e.target;
 
@@ -33,6 +34,7 @@ class VideoListings extends React.Component {
 		let ratingAvg = Math.ceil(ratingArr.reduce(function(sum, a) { return sum + a },0)/(ratingArr.length||1));
 		
 		return (
+			// this is for readonly rating
 			<Rating initialRate={ratingAvg} 
 				empty="glyphicon glyphicon-star-empty star-grey fs-lg" 
 				full="glyphicon glyphicon-star star-yellow fs-lg" 
@@ -52,7 +54,7 @@ class VideoListings extends React.Component {
 		}
 	}
 	render() {
-		let vidsCount = this.props.videos.length;
+		let vidsCount = this.state.videos.length;
 		return (
 			<section className="container page-wrapper">
 				<div className="heading">We got <strong>{vidsCount}</strong> videos for you to enjoy!</div>
@@ -63,7 +65,7 @@ class VideoListings extends React.Component {
 
 					<div className="row flex">
 						{this.props.videos.map((video, index) => (
-							<div className="video-grid-wrapper flex col-xs-12 col-md-4" key={index}>
+							<div className="video-figure-wrapper flex col-xs-12 col-md-4" key={index}>
 								<figure className="video-figure">
 									<div className="video-title">
 										<Link className="video-link" to={`/video/${video._id}`}>{video.name}</Link>

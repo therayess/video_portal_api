@@ -1,0 +1,31 @@
+.video-figure-wrapper {
+	margin-bottom: 30px;
+	.video-figure {
+		background-color: #EAEAEA;
+		.video-title {
+			font-size: 16px;
+			font-weight: bold;
+			text-align: center;
+			padding: 15px;
+			.video-link {
+				color: #666;
+				text-decoration: none;
+				&:hover {
+					color: #333;
+				}
+			}
+		}
+		.video-wrapper {
+			video {
+				width: 100%;
+				height: auto;
+			}
+		}
+		.caption-wrapper {
+			padding: 15px;
+		}
+		.video-desc {
+			color: #333;
+		}
+	}
+}

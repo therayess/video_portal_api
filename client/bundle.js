@@ -85,7 +85,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	__webpack_require__(289);
+	__webpack_require__(288);
 
 	var router = _react2.default.createElement(
 		_reactRedux.Provider,
@@ -225,40 +225,25 @@
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
-	function defaultSetTimout() {
-	    throw new Error('setTimeout has not been defined');
-	}
-	function defaultClearTimeout() {
-	    throw new Error('clearTimeout has not been defined');
-	}
 	(function () {
 	    try {
-	        if (typeof setTimeout === 'function') {
-	            cachedSetTimeout = setTimeout;
-	        } else {
-	            cachedSetTimeout = defaultSetTimout;
-	        }
+	        cachedSetTimeout = setTimeout;
 	    } catch (e) {
-	        cachedSetTimeout = defaultSetTimout;
+	        cachedSetTimeout = function cachedSetTimeout() {
+	            throw new Error('setTimeout is not defined');
+	        };
 	    }
 	    try {
-	        if (typeof clearTimeout === 'function') {
-	            cachedClearTimeout = clearTimeout;
-	        } else {
-	            cachedClearTimeout = defaultClearTimeout;
-	        }
+	        cachedClearTimeout = clearTimeout;
 	    } catch (e) {
-	        cachedClearTimeout = defaultClearTimeout;
+	        cachedClearTimeout = function cachedClearTimeout() {
+	            throw new Error('clearTimeout is not defined');
+	        };
 	    }
 	})();
 	function runTimeout(fun) {
 	    if (cachedSetTimeout === setTimeout) {
 	        //normal enviroments in sane situations
-	        return setTimeout(fun, 0);
-	    }
-	    // if setTimeout wasn't available but was latter defined
-	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-	        cachedSetTimeout = setTimeout;
 	        return setTimeout(fun, 0);
 	    }
 	    try {
@@ -277,11 +262,6 @@
 	function runClearTimeout(marker) {
 	    if (cachedClearTimeout === clearTimeout) {
 	        //normal enviroments in sane situations
-	        return clearTimeout(marker);
-	    }
-	    // if clearTimeout wasn't available but was latter defined
-	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-	        cachedClearTimeout = clearTimeout;
 	        return clearTimeout(marker);
 	    }
 	    try {
@@ -12541,22 +12521,19 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	// a reducer takes in 2 things:
-
-	// 1. the action (info about what happened)
-	// 2. a copy of the current state
-	// here's an action, store --> process (update) --> updated store
-
 	function user() {
 		var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 		var action = arguments[1];
 
 		switch (action.type) {
 			case 'LOGIN':
+				// update the user state
 				return { username: action.username, sessionId: action.sessionId };
 			case 'LOGIN_ERROR':
+				// used to display errors locally in login page
 				return { login_error: action.error };
 			case 'LOGOUT':
+				// empty the user state
 				return { username: '', sessionId: '' };
 			default:
 				return state;
@@ -12585,25 +12562,20 @@
 		}
 	}
 
-	// a reducer takes in 2 things:
-
-	// 1. the action (info about what happened)
-	// 2. a copy of the current state
-	// here's an action, store --> process (update) --> updated store
-
 	function videos() {
 		var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 		var action = arguments[1];
 
-		var index = action.index;
-
 		switch (action.type) {
 			case 'GET_VIDEOS':
+				// append incoming vids to existing ones
 				return [].concat(_toConsumableArray(state), _toConsumableArray(action.videos));
 			case 'LOGOUT':
+				// empty the videos state
 				return [];
 			case 'RATE':
-				return [].concat(_toConsumableArray(state.slice(0, index)), [action.video], _toConsumableArray(state.slice(index + 1)));
+				// update the rated video only, keep other videos intact
+				return [].concat(_toConsumableArray(state.slice(0, action.index)), [action.video], _toConsumableArray(state.slice(action.index + 1)));
 			default:
 				return state;
 		}
@@ -29882,6 +29854,11 @@
 	exports.getVideos = getVideos;
 	exports.rateVideoAction = rateVideoAction;
 	exports.rate = rate;
+	// I will be using thunks for my api calls:
+	// https://github.com/gaearon/redux-thunk
+
+	/* User auth actions
+	------------------------------------------------*/
 	function loginAction(username, password) {
 		return function (dispatch, getState) {
 			var url = "/user/auth",
@@ -29899,6 +29876,7 @@
 					return result.json();
 				}
 			}).then(function (jsonResult) {
+				// if errors
 				if (jsonResult.error) {
 					dispatch(loginError(jsonResult.error));
 				} else {
@@ -29932,6 +29910,10 @@
 		};
 	}
 
+	/* Videos actions
+	------------------------------------------------*/
+
+	// by default the api returns 10 vids to me, limit and skip can be specified too
 	function getVideosAction(sessionId) {
 		var limit = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 		var skip = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
@@ -29975,6 +29957,11 @@
 		};
 	}
 
+	/* Rating actions
+	------------------------------------------------*/
+
+	// videoId and rating are for the api call, index will be used to set the
+	// state in the reducer
 	function rateVideoAction(videoId, rating, index) {
 		return function (dispatch, getState) {
 			var sessionId = getState().user.sessionId;
@@ -30286,7 +30273,7 @@
 					null,
 					_react2.default.createElement(
 						'div',
-						{ className: 'login-tron jumbotron' },
+						{ className: 'login-tron' },
 						_react2.default.createElement(
 							'div',
 							{ className: 'container' },
@@ -30500,7 +30487,7 @@
 	  md5._digestsize = 16;
 
 	  module.exports = function (message, options) {
-	    if (message === undefined || message === null) throw new Error('Illegal argument ' + message);
+	    if (message === 'undefined' || message === null) throw new Error('Illegal argument ' + message);
 
 	    var digestbytes = crypt.wordsToBytes(md5(message, options));
 	    return options && options.asBytes ? digestbytes : options && options.asString ? bin.bytesToString(digestbytes) : crypt.bytesToHex(digestbytes);
@@ -30728,6 +30715,7 @@
 		}, {
 			key: 'handleVideosPlay',
 			value: function handleVideosPlay(e) {
+				// To make sure only one video is playing at a time
 				var videos = document.getElementsByTagName('video'),
 				    currentVideo = e.target;
 
@@ -30744,10 +30732,13 @@
 					return sum + a;
 				}, 0) / (ratingArr.length || 1));
 
-				return _react2.default.createElement(_reactRating2.default, { initialRate: ratingAvg,
-					empty: 'glyphicon glyphicon-star-empty star-grey fs-lg',
-					full: 'glyphicon glyphicon-star star-yellow fs-lg',
-					readonly: true });
+				return (
+					// this is for readonly rating
+					_react2.default.createElement(_reactRating2.default, { initialRate: ratingAvg,
+						empty: 'glyphicon glyphicon-star-empty star-grey fs-lg',
+						full: 'glyphicon glyphicon-star star-yellow fs-lg',
+						readonly: true })
+				);
 			}
 		}, {
 			key: 'componentWillMount',
@@ -30768,7 +30759,7 @@
 			value: function render() {
 				var _this2 = this;
 
-				var vidsCount = this.props.videos.length;
+				var vidsCount = this.state.videos.length;
 				return _react2.default.createElement(
 					'section',
 					{ className: 'container page-wrapper' },
@@ -30799,7 +30790,7 @@
 							this.props.videos.map(function (video, index) {
 								return _react2.default.createElement(
 									'div',
-									{ className: 'video-grid-wrapper flex col-xs-12 col-md-4', key: index },
+									{ className: 'video-figure-wrapper flex col-xs-12 col-md-4', key: index },
 									_react2.default.createElement(
 										'figure',
 										{ className: 'video-figure' },
@@ -31560,17 +31551,15 @@
 
 	'use strict';
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _VideoFigure = __webpack_require__(288);
+	var _reactRating = __webpack_require__(286);
 
-	var _VideoFigure2 = _interopRequireDefault(_VideoFigure);
+	var _reactRating2 = _interopRequireDefault(_reactRating);
 
 	var _reactRouter = __webpack_require__(35);
 
@@ -31598,10 +31587,14 @@
 			_this.state = {
 				video: [],
 				otherVids: [],
-				index: 0
+				index: 0,
+				rated: false
 			};
 
 			_this.resetState = _this.resetState.bind(_this);
+			_this.handleVideosPlay = _this.handleVideosPlay.bind(_this);
+			_this.renderRating = _this.renderRating.bind(_this);
+			_this.rateVideo = _this.rateVideo.bind(_this);
 			return _this;
 		}
 
@@ -31624,114 +31617,11 @@
 				this.setState({
 					video: props.videos[index],
 					otherVids: otherVids,
-					index: index
+					index: index,
+					rated: false
 				});
 			}
 		}, {
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				this.resetState(this.props);
-			}
-		}, {
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(nextProps) {
-				// listen to detail page navigation changes
-				if (nextProps.user.sessionId && nextProps.user.sessionId != '' && nextProps.params.videoId != this.props.params.videoId) {
-					this.resetState(nextProps);
-				}
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'row' },
-					_react2.default.createElement(
-						'div',
-						{ className: 'text-center' },
-						_react2.default.createElement(
-							_reactRouter.Link,
-							{ to: '/videos' },
-							'<<',
-							' Back to videos'
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'col-xs-12 col-md-8 video-figure-wrapper' },
-						_react2.default.createElement(_VideoFigure2.default, _extends({ video: this.state.video, vidIndex: this.state.index }, this.props))
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'col-xs-12 col-md-4' },
-						this.state.otherVids.map(function (video, index) {
-							return _react2.default.createElement(
-								'div',
-								{ className: 'video-figure-wrapper', key: index },
-								_react2.default.createElement(_VideoFigure2.default, _extends({ video: video,
-									key: index,
-									vidIndex: _this2.state.index
-								}, _this2.props, {
-									withLink: true }))
-							);
-						})
-					)
-				);
-			}
-		}]);
-
-		return VideoDetails;
-	}(_react2.default.Component);
-
-	module.exports = VideoDetails;
-
-/***/ },
-/* 288 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRating = __webpack_require__(286);
-
-	var _reactRating2 = _interopRequireDefault(_reactRating);
-
-	var _reactRouter = __webpack_require__(35);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var VideoFigure = function (_React$Component) {
-		_inherits(VideoFigure, _React$Component);
-
-		function VideoFigure(props) {
-			_classCallCheck(this, VideoFigure);
-
-			var _this = _possibleConstructorReturn(this, (VideoFigure.__proto__ || Object.getPrototypeOf(VideoFigure)).call(this, props));
-
-			_this.state = {
-				rated: false
-			};
-
-			_this.handleVideosPlay = _this.handleVideosPlay.bind(_this);
-			_this.renderRating = _this.renderRating.bind(_this);
-			_this.rateVideo = _this.rateVideo.bind(_this);
-			return _this;
-		}
-
-		_createClass(VideoFigure, [{
 			key: 'handleVideosPlay',
 			value: function handleVideosPlay(e) {
 				// To make sure only one video is playing at a time
@@ -31747,21 +31637,23 @@
 		}, {
 			key: 'renderRating',
 			value: function renderRating(ratingArr) {
+				var readonly = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
 				// getting the average rating from the ratings array then i'm returning 3 shapes
 				// of rating component for different states of the rating:
 				var ratingAvg = Math.ceil(ratingArr.reduce(function (sum, a) {
 					return sum + a;
 				}, 0) / (ratingArr.length || 1));
 
-				if (this.props.withLink) {
-					// this is for readonly rating
+				if (readonly) {
+					// this is for readonly rating, used in the sidebar videos
 					return _react2.default.createElement(_reactRating2.default, { initialRate: ratingAvg,
 						empty: 'glyphicon glyphicon-star-empty star-grey fs-lg',
 						full: 'glyphicon glyphicon-star star-yellow fs-lg',
 						readonly: true });
 				} else {
 					if (this.state.rated) {
-						// this is the state after rating is done
+						// this is the state after rating is done, used for the main video
 						return _react2.default.createElement(
 							'div',
 							{ className: 'ratings-wrapper' },
@@ -31781,7 +31673,7 @@
 							)
 						);
 					} else {
-						// this one enables users to rate
+						// this one enables users to rate, used for the main video
 						return _react2.default.createElement(
 							'div',
 							{ className: 'ratings-wrapper' },
@@ -31797,8 +31689,8 @@
 							),
 							_react2.default.createElement(_reactRating2.default, { placeholderRate: ratingAvg,
 								empty: 'glyphicon glyphicon-star-empty star-grey fs-lg',
-								placeholder: 'glyphicon glyphicon-star star-red fs-lg',
-								full: 'glyphicon glyphicon-star star-yellow fs-lg',
+								placeholder: 'glyphicon glyphicon-star star-yellow fs-lg',
+								full: 'glyphicon glyphicon-star star-red fs-lg',
 								onClick: this.rateVideo.bind(null, this.props) })
 						);
 					}
@@ -31808,18 +31700,20 @@
 			key: 'rateVideo',
 			value: function rateVideo(props, rating) {
 				// dispatch rating action
-				props.rateVideoAction(props.video._id, rating, props.vidIndex);
+				props.rateVideoAction(this.state.video._id, rating, this.state.index);
+			}
+		}, {
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				// update the state and re-render the page
+				this.resetState(this.props);
 			}
 		}, {
 			key: 'componentWillReceiveProps',
 			value: function componentWillReceiveProps(nextProps) {
-				var index = nextProps.videos.findIndex(function (video) {
-					return video._id == nextProps.params.videoId;
-				});
-
 				if (nextProps.user.sessionId && nextProps.user.sessionId != '') {
 					// listen to rating change and update state with the video including the new rating
-					if (nextProps.videos[this.props.vidIndex].ratings.length != this.props.video.ratings.length) {
+					if (nextProps.videos[this.state.index]._id == this.state.video._id && nextProps.videos[this.state.index].ratings.length != this.state.video.ratings.length) {
 						this.setState({ rated: true });
 					}
 
@@ -31838,70 +31732,153 @@
 						}
 
 						// reset rated state
-						this.setState({ rated: false });
+						this.resetState(nextProps);
 					}
 				}
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var video = this.props.video,
-				    videoTitleComponent = void 0;
+				var _this2 = this;
 
-				// i'm using withLink to define the sidebar videos that users can navigate to,
-				// otherwise i display a normal header for the main video.
-				if (this.props.withLink) {
-					videoTitleComponent = _react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/video/' + video._id },
-						video.name
-					);
-				} else {
-					videoTitleComponent = _react2.default.createElement(
-						'h2',
-						null,
-						video.name
-					);
-				}
+				var video = this.state.video;
 				return _react2.default.createElement(
-					'figure',
-					{ className: 'video-figure' },
+					'section',
+					{ className: 'video-details-wrapper' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'video-title' },
-						videoTitleComponent
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'video-wrapper' },
+						{ className: 'details-tron' },
 						_react2.default.createElement(
-							'video',
-							{ controls: true, onPlay: this.handleVideosPlay },
-							_react2.default.createElement('source', { src: '/' + video.url, type: 'video/mp4' }),
-							'Your browser does not support the video tag.'
+							'div',
+							{ className: 'container' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'video-wrapper' },
+								_react2.default.createElement(
+									'video',
+									{ controls: true, onPlay: this.handleVideosPlay },
+									_react2.default.createElement('source', { src: '/' + video.url, type: 'video/mp4' }),
+									'Your browser does not support the video tag.'
+								)
+							)
 						)
 					),
 					_react2.default.createElement(
-						'figcaption',
-						null,
-						this.renderRating(video.ratings),
+						'div',
+						{ className: 'container section-wrapper' },
 						_react2.default.createElement(
-							'p',
-							{ className: 'video-desc' },
-							video.description
+							'div',
+							{ className: 'row' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'col-xs-12 col-md-8' },
+								_react2.default.createElement(
+									'div',
+									{ className: 'info-head row' },
+									_react2.default.createElement(
+										'div',
+										{ className: 'col-xs-12 col-md-6' },
+										_react2.default.createElement(
+											'div',
+											{ className: 'video-title' },
+											video.name
+										)
+									),
+									_react2.default.createElement(
+										'div',
+										{ className: 'col-xs-12 col-md-6 text-right' },
+										this.renderRating(video.ratings)
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: 'video-desc' },
+									_react2.default.createElement(
+										'p',
+										null,
+										_react2.default.createElement(
+											'strong',
+											null,
+											'About this video'
+										)
+									),
+									_react2.default.createElement(
+										'p',
+										null,
+										video.description
+									),
+									_react2.default.createElement(
+										'p',
+										null,
+										_react2.default.createElement(
+											_reactRouter.Link,
+											{ to: '/videos' },
+											'<<',
+											' Back to all videos'
+										)
+									)
+								)
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'col-xs-12 col-md-4' },
+								_react2.default.createElement(
+									'p',
+									{ className: 'text-center' },
+									_react2.default.createElement(
+										'strong',
+										null,
+										'Check out these videos too:'
+									)
+								),
+								this.state.otherVids.map(function (video, index) {
+									return _react2.default.createElement(
+										'div',
+										{ className: 'video-figure-wrapper', key: index },
+										_react2.default.createElement(
+											'div',
+											{ className: 'video-figure' },
+											_react2.default.createElement(
+												'div',
+												{ className: 'video-title' },
+												_react2.default.createElement(
+													_reactRouter.Link,
+													{ className: 'video-link', to: '/video/' + video._id },
+													video.name
+												)
+											),
+											_react2.default.createElement(
+												'div',
+												{ className: 'video-wrapper' },
+												_react2.default.createElement(
+													'video',
+													{ controls: true, onPlay: _this2.handleVideosPlay },
+													_react2.default.createElement('source', { src: '/' + video.url, type: 'video/mp4' }),
+													'Your browser does not support the video tag.'
+												)
+											),
+											_react2.default.createElement(
+												'div',
+												{ className: 'text-center' },
+												_this2.renderRating(video.ratings, true)
+											)
+										)
+									);
+								})
+							)
 						)
 					)
 				);
 			}
 		}]);
 
-		return VideoFigure;
+		return VideoDetails;
 	}(_react2.default.Component);
 
-	module.exports = VideoFigure;
+	module.exports = VideoDetails;
 
 /***/ },
-/* 289 */
+/* 288 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

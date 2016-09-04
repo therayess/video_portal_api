@@ -53,7 +53,7 @@ class Login extends React.Component {
 	render() {
 		return (
 			<section>
-				<div className="login-tron jumbotron">
+				<div className="login-tron">
 					<div className="container">
 						<h1 className="intro-heading">
 							Welcome to <em>X-Over</em> Videos Portal

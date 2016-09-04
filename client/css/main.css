@@ -44,33 +44,57 @@
     .login-wrapper {
       width: 50%; } }
 
-.video-grid-wrapper {
-  margin-bottom: 30px; }
-
 .video-figure-wrapper {
-  margin-bottom: 15px; }
+  margin-bottom: 30px; }
+  .video-figure-wrapper .video-figure {
+    background-color: #EAEAEA; }
+    .video-figure-wrapper .video-figure .video-title {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      padding: 15px; }
+      .video-figure-wrapper .video-figure .video-title .video-link {
+        color: #666;
+        text-decoration: none; }
+        .video-figure-wrapper .video-figure .video-title .video-link:hover {
+          color: #333; }
+    .video-figure-wrapper .video-figure .video-wrapper video {
+      width: 100%;
+      height: auto; }
+    .video-figure-wrapper .video-figure .caption-wrapper {
+      padding: 15px; }
+    .video-figure-wrapper .video-figure .video-desc {
+      color: #333; }
 
-.video-figure {
-  background-color: #EAEAEA; }
-  .video-figure .video-title {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    padding: 15px; }
-    .video-figure .video-title .video-link {
-      color: #666;
-      text-decoration: none; }
-      .video-figure .video-title .video-link:hover {
-        color: #333; }
-    .video-figure .video-title .video-name {
-      margin: 0; }
-  .video-figure .video-wrapper video {
-    width: 100%;
-    height: auto; }
-  .video-figure .caption-wrapper {
-    padding: 15px; }
-  .video-figure .video-desc {
-    color: #333; }
+.video-details-wrapper .details-tron {
+  background-color: #000; }
+  .video-details-wrapper .details-tron .video-wrapper {
+    width: 80%;
+    margin: 0 auto; }
+    .video-details-wrapper .details-tron .video-wrapper video {
+      width: 100%;
+      height: auto;
+      vertical-align: bottom; }
+
+.video-details-wrapper .info-head {
+  border-bottom: 1px solid #CCC;
+  padding-bottom: 5px;
+  margin-bottom: 30px; }
+  .video-details-wrapper .info-head .video-title {
+    font-size: 24px;
+    color: #666; }
+  .video-details-wrapper .info-head .ratings-wrapper {
+    position: relative;
+    top: 8px; }
+
+.video-details-wrapper .video-desc {
+  color: #333; }
+
+.video-details-wrapper .video-figure-wrapper .video-figure {
+  padding: 15px; }
+  .video-details-wrapper .video-figure-wrapper .video-figure .video-title {
+    padding: 0;
+    margin-bottom: 5px; }
 
 .ratings-wrapper {
   position: relative;
@@ -115,3 +139,7 @@
 .page-wrapper {
   margin-top: 60px;
   margin-bottom: 60px; }
+
+.section-wrapper {
+  margin-top: 30px;
+  margin-bottom: 30px; }

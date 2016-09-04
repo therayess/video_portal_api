@@ -1,3 +1,8 @@
+// I will be using thunks for my api calls:
+// https://github.com/gaearon/redux-thunk
+
+/* User auth actions
+------------------------------------------------*/
 export function loginAction(username, password) {
 	return function(dispatch, getState) {
 	    let url = "/user/auth",
@@ -15,6 +20,7 @@ export function loginAction(username, password) {
 				return result.json();
 			}
 		}).then(function(jsonResult) {
+			// if errors
 			if (jsonResult.error) {
 				dispatch(loginError(jsonResult.error));
 			}
@@ -49,6 +55,11 @@ export function logout() {
 	}
 }
 
+
+/* Videos actions
+------------------------------------------------*/
+
+// by default the api returns 10 vids to me, limit and skip can be specified too
 export function getVideosAction(sessionId, limit = null, skip = null) {
 	return function(dispatch, getState) {
 	    let url = "/videos?sessionId=" + sessionId;
@@ -86,6 +97,11 @@ export function getVideos(videos) {
 	}
 }
 
+/* Rating actions
+------------------------------------------------*/
+
+// videoId and rating are for the api call, index will be used to set the
+// state in the reducer
 export function rateVideoAction(videoId, rating, index) {
 	return function(dispatch, getState) {
 		let sessionId = getState().user.sessionId;

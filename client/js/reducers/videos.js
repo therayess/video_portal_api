@@ -1,22 +1,17 @@
-// a reducer takes in 2 things:
-
-// 1. the action (info about what happened)
-// 2. a copy of the current state
-// here's an action, store --> process (update) --> updated store
-
 function videos(state = {}, action) {
-	const index = action.index;
-	
 	switch (action.type) {
 		case 'GET_VIDEOS':
+			// append incoming vids to existing ones
 			return [...state, ...action.videos];
 		case 'LOGOUT':
+			// empty the videos state
 			return [];
 		case 'RATE':
+			// update the rated video only, keep other videos intact
 			return [
-				...state.slice(0, index),
+				...state.slice(0, action.index),
 				action.video,
-				...state.slice(index + 1)
+				...state.slice(action.index + 1)
 			]
 		default:
 			return state;

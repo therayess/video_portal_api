@@ -1,0 +1,29 @@
+.ratings-wrapper {
+	position: relative;
+	margin-bottom: 15px;
+	.rating-msg {
+		color: #666;
+		font-weight: bold;
+		font-style: italic;
+		position: relative;
+		bottom: 4px;
+	}
+	.rate-msg {
+		font-size: 12px;
+		color: #E4382E;
+		position: absolute;
+		top: -15px;
+	}
+}
+
+.star-yellow {
+	color: #FFCC1D;
+}
+
+.star-red {
+	color: #E4382E;
+}
+
+.star-grey {
+	color: #CCC;
+}

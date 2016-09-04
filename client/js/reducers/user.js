@@ -1,16 +1,13 @@
-// a reducer takes in 2 things:
-
-// 1. the action (info about what happened)
-// 2. a copy of the current state
-// here's an action, store --> process (update) --> updated store
-
 function user(state = {}, action) {
 	switch (action.type) {
 		case 'LOGIN':
+			// update the user state
 		    return {username: action.username, sessionId: action.sessionId};
 		case 'LOGIN_ERROR':
+			// used to display errors locally in login page
 			return {login_error: action.error}
 		case 'LOGOUT':
+			// empty the user state
 			return {username: '', sessionId: ''};
 		default:
 			return state;

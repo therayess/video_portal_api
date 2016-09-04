@@ -1,0 +1,39 @@
+.video-details-wrapper {
+	.details-tron {
+		background-color: #000;
+		.video-wrapper {
+			width: 80%;
+			margin: 0 auto;
+			video {
+				width: 100%;
+				height: auto;
+				vertical-align: bottom;
+			}
+		}
+	}
+	.info-head {
+		border-bottom: 1px solid #CCC;
+		padding-bottom: 5px;
+		margin-bottom: 30px;
+		.video-title {
+			font-size: 24px;
+			color: #666;
+		}
+		.ratings-wrapper {
+			position: relative;
+			top: 8px;
+		}
+	}
+	.video-desc {
+		color: #333;
+	}
+	.video-figure-wrapper {
+		.video-figure {
+			padding: 15px;
+			.video-title {
+				padding: 0;
+				margin-bottom: 5px;
+			}
+		}
+	}
+}
