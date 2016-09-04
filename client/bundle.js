@@ -225,25 +225,40 @@
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout() {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
 	    try {
-	        cachedSetTimeout = setTimeout;
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
 	    } catch (e) {
-	        cachedSetTimeout = function cachedSetTimeout() {
-	            throw new Error('setTimeout is not defined');
-	        };
+	        cachedSetTimeout = defaultSetTimout;
 	    }
 	    try {
-	        cachedClearTimeout = clearTimeout;
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
 	    } catch (e) {
-	        cachedClearTimeout = function cachedClearTimeout() {
-	            throw new Error('clearTimeout is not defined');
-	        };
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
 	})();
 	function runTimeout(fun) {
 	    if (cachedSetTimeout === setTimeout) {
 	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
 	        return setTimeout(fun, 0);
 	    }
 	    try {
@@ -262,6 +277,11 @@
 	function runClearTimeout(marker) {
 	    if (cachedClearTimeout === clearTimeout) {
 	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
 	        return clearTimeout(marker);
 	    }
 	    try {
@@ -30059,7 +30079,7 @@
 		_createClass(Main, [{
 			key: 'render',
 			value: function render() {
-				return _react2.default.createElement('div', { className: 'container' }, _react2.default.createElement(_Header2.default, this.props), _react2.default.cloneElement(this.props.children, this.props));
+				return _react2.default.createElement('div', null, _react2.default.createElement(_Header2.default, this.props), _react2.default.cloneElement(this.props.children, this.props));
 			}
 		}]);
 
@@ -30120,12 +30140,14 @@
 	            if (user.sessionId && user.sessionId !== '') {
 	                return _react2.default.createElement(
 	                    'div',
-	                    { className: 'text-right' },
+	                    { className: 'logout-link' },
 	                    _react2.default.createElement(
 	                        'a',
-	                        { href: '#', onClick: this.handleLogout.bind(this) },
+	                        { href: '#', onClick: this.handleLogout.bind(this), className: 'btn btn-danger btn-sm' },
+	                        _react2.default.createElement('span', { className: 'glyphicon glyphicon-user' }),
+	                        ' ',
 	                        user.username,
-	                        ' (Logout)'
+	                        ' ( Logout )'
 	                    )
 	                );
 	            }
@@ -30141,22 +30163,26 @@
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'header',
-	                { className: 'page-header' },
+	                { className: 'header' },
 	                _react2.default.createElement(
-	                    'h1',
-	                    { className: 'text-center' },
+	                    'section',
+	                    { className: 'container clearfix' },
 	                    _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/' },
-	                        'Crossover Video Portal '
+	                        'div',
+	                        { className: 'logo' },
+	                        _react2.default.createElement(
+	                            _reactRouter.Link,
+	                            { to: '/' },
+	                            'Crossover Video Portal '
+	                        ),
+	                        _react2.default.createElement(
+	                            'small',
+	                            null,
+	                            'By Ammar Rayess'
+	                        )
 	                    ),
-	                    _react2.default.createElement(
-	                        'small',
-	                        null,
-	                        'By Ammar Rayess'
-	                    )
-	                ),
-	                this.renderLogoutLink()
+	                    this.renderLogoutLink()
+	                )
 	            );
 	        }
 	    }]);
@@ -30256,40 +30282,54 @@
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
-					'div',
-					{ className: 'login-wrapper' },
+					'section',
+					null,
 					_react2.default.createElement(
 						'div',
-						{ className: 'panel panel-default' },
+						{ className: 'login-tron jumbotron' },
 						_react2.default.createElement(
 							'div',
-							{ className: 'panel-heading' },
-							'Please login'
-						),
+							{ className: 'container' },
+							_react2.default.createElement(
+								'h1',
+								{ className: 'intro-heading' },
+								'Welcome to ',
+								_react2.default.createElement(
+									'em',
+									null,
+									'X-Over'
+								),
+								' Videos Portal',
+								_react2.default.createElement(
+									'small',
+									null,
+									'Awesome videos, reviews, ratings and more!!'
+								)
+							)
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'container' },
 						_react2.default.createElement(
 							'div',
-							{ className: 'panel-body' },
+							{ className: 'login-wrapper' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'heading' },
+								'Please login to access our videos'
+							),
 							_react2.default.createElement(
 								'form',
 								{ ref: 'loginForm', onSubmit: this.handleSubmit },
 								_react2.default.createElement(
 									'div',
 									{ className: 'form-group' },
-									_react2.default.createElement(
-										'label',
-										{ htmlFor: 'username' },
-										'Username'
-									),
 									_react2.default.createElement('input', { type: 'text', ref: 'username', name: 'username', className: 'form-control', placeholder: 'Username' })
 								),
 								_react2.default.createElement(
 									'div',
 									{ className: 'form-group' },
-									_react2.default.createElement(
-										'label',
-										{ htmlFor: 'password' },
-										'Password'
-									),
 									_react2.default.createElement('input', { type: 'password', ref: 'password', name: 'password', className: 'form-control', placeholder: 'Password' })
 								),
 								this.handleErrors(),
@@ -30460,7 +30500,7 @@
 	  md5._digestsize = 16;
 
 	  module.exports = function (message, options) {
-	    if (message === 'undefined' || message === null) throw new Error('Illegal argument ' + message);
+	    if (message === undefined || message === null) throw new Error('Illegal argument ' + message);
 
 	    var digestbytes = crypt.wordsToBytes(md5(message, options));
 	    return options && options.asBytes ? digestbytes : options && options.asString ? bin.bytesToString(digestbytes) : crypt.bytesToHex(digestbytes);
@@ -30728,9 +30768,21 @@
 			value: function render() {
 				var _this2 = this;
 
+				var vidsCount = this.props.videos.length;
 				return _react2.default.createElement(
-					'div',
-					null,
+					'section',
+					{ className: 'container page-wrapper' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'heading' },
+						'We got ',
+						_react2.default.createElement(
+							'strong',
+							null,
+							vidsCount
+						),
+						' videos for you to enjoy!'
+					),
 					_react2.default.createElement(
 						_reactInfiniteScrollComponent2.default,
 						{
@@ -30743,11 +30795,11 @@
 							) },
 						_react2.default.createElement(
 							'div',
-							{ className: 'row' },
+							{ className: 'row flex' },
 							this.props.videos.map(function (video, index) {
 								return _react2.default.createElement(
 									'div',
-									{ className: 'video-grid-wrapper col-xs-12 col-md-4', key: index },
+									{ className: 'video-grid-wrapper flex col-xs-12 col-md-4', key: index },
 									_react2.default.createElement(
 										'figure',
 										{ className: 'video-figure' },
@@ -30756,7 +30808,7 @@
 											{ className: 'video-title' },
 											_react2.default.createElement(
 												_reactRouter.Link,
-												{ to: '/video/' + video._id },
+												{ className: 'video-link', to: '/video/' + video._id },
 												video.name
 											)
 										),
@@ -30772,7 +30824,7 @@
 										),
 										_react2.default.createElement(
 											'figcaption',
-											null,
+											{ className: 'caption-wrapper' },
 											_this2.renderRating(video.ratings),
 											_react2.default.createElement(
 												'p',

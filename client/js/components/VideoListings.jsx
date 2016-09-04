@@ -52,19 +52,21 @@ class VideoListings extends React.Component {
 		}
 	}
 	render() {
+		let vidsCount = this.props.videos.length;
 		return (
-			<div>
+			<section className="container page-wrapper">
+				<div className="heading">We got <strong>{vidsCount}</strong> videos for you to enjoy!</div>
 				<InfiniteScroll
 					next={this.loadMoreVids.bind(this)}
 					hasMore={true}  
 					loader={<h3 className="text-center">Loading...</h3>}>
 
-					<div className="row">
+					<div className="row flex">
 						{this.props.videos.map((video, index) => (
-							<div className="video-grid-wrapper col-xs-12 col-md-4" key={index}>
+							<div className="video-grid-wrapper flex col-xs-12 col-md-4" key={index}>
 								<figure className="video-figure">
 									<div className="video-title">
-										<Link to={`/video/${video._id}`}>{video.name}</Link>
+										<Link className="video-link" to={`/video/${video._id}`}>{video.name}</Link>
 									</div>
 									<div className="video-wrapper">
 										<video controls onPlay={this.handleVideosPlay}>
@@ -73,7 +75,7 @@ class VideoListings extends React.Component {
 										</video>
 									</div>
 
-									<figcaption>
+									<figcaption className="caption-wrapper">
 										{this.renderRating(video.ratings)}
 										<p className="video-desc">{video.description}</p>
 									</figcaption>
@@ -82,7 +84,7 @@ class VideoListings extends React.Component {
 						))}
 					</div>
 				</InfiniteScroll>
-			</div>
+			</section>
 		)
 	}
 }

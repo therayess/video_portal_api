@@ -52,19 +52,24 @@ class Login extends React.Component {
 	}
 	render() {
 		return (
-			<div className="login-wrapper">
-				<div className="panel panel-default">
-					<div className="panel-heading">
-						Please login
+			<section>
+				<div className="login-tron jumbotron">
+					<div className="container">
+						<h1 className="intro-heading">
+							Welcome to <em>X-Over</em> Videos Portal
+							<small>Awesome videos, reviews, ratings and more!!</small>
+						</h1>
 					</div>
-					<div className="panel-body">
+				</div>
+				
+				<div className="container">
+					<div className="login-wrapper">
+						<div className="heading">Please login to access our videos</div>
 						<form ref="loginForm" onSubmit={this.handleSubmit}>
 							<div className="form-group">
-								<label htmlFor="username">Username</label>
 								<input type="text" ref="username" name="username" className="form-control" placeholder="Username" />
 							</div>
 							<div className="form-group">
-								<label htmlFor="password">Password</label>
 								<input type="password" ref="password" name="password" className="form-control" placeholder="Password" />
 							</div>
 							{this.handleErrors()}
@@ -72,7 +77,7 @@ class Login extends React.Component {
 						</form>
 					</div>
 				</div>
-			</div>
+			</section>
 		)
 	}
 }

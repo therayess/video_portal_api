@@ -15,9 +15,9 @@ class Header extends React.Component {
 
         if (user.sessionId && user.sessionId !== '') {
             return (
-                <div className="text-right">
-                    <a href="#" onClick={this.handleLogout.bind(this)}>
-                        {user.username} (Logout)
+                <div className="logout-link">
+                    <a href="#" onClick={this.handleLogout.bind(this)} className="btn btn-danger btn-sm">
+                        <span className="glyphicon glyphicon-user"></span> {user.username} ( Logout )
                     </a>
                 </div>
             )
@@ -30,12 +30,14 @@ class Header extends React.Component {
     }
     render() {
         return (
-            <header className='page-header'>
-                <h1 className="text-center">
-                    <Link to='/'>Crossover Video Portal </Link>
-                    <small>By Ammar Rayess</small>
-                </h1>
-                {this.renderLogoutLink()}
+            <header className='header'>
+                <section className="container clearfix">
+                    <div className="logo">
+                        <Link to='/'>Crossover Video Portal </Link>
+                        <small>By Ammar Rayess</small>
+                    </div>
+                    {this.renderLogoutLink()}
+                </section>
             </header>
         )
     }
