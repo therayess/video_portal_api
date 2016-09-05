@@ -10,6 +10,7 @@ Setup
 2. compile and build: npm run build
 3. start development server: npm start
 4. open http://localhost:3000/ in your browser and the app should work
+5. run tests: npm run test
 
 
 
@@ -24,3 +25,9 @@ In my action creators i use the redux thunk library to communicate with the api 
 I don't use the getSingleVideo api request in my app because i opted to manipulate the single video pages (details pages) using the videos i already have fetched for listings and are stored in the store, thus, reducing the need for more api calls.
 
 Code is pretty straightforward and inline comments are provided where necessary, i used some helper libraries like md5 to encode the password, react-rating for the rating component and react-infinite-scroll-component for the infinite scrolling listings.
+
+
+
+Tests
+---
+Having had ran out of time to submit this project i have added the tests for reducers but did not manage to write up the actions and components tests yet, i will be working on them and completing them for this project anyway but please do let me know if you would accept it if i send them to you in the coming days.
