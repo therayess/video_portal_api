@@ -8,9 +8,10 @@ Setup
 ---
 1. install dependencies: npm install
 2. compile and build: npm run build
-3. start development server: npm start
-4. open http://localhost:3000/ in your browser and the app should work
-5. run tests: npm run test
+3. make sure mongodb is running
+4. start development server: npm start
+5. open http://localhost:3000/ in your browser and the app should work
+6. run tests: npm run test
 
 
 
